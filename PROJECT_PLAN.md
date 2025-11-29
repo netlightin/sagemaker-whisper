@@ -20,25 +20,7 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 
 **Goal**: Prepare development environment and AWS account
 
-#### 1.1 Local Development Setup
-
-- [ ] Install Terraform (>= 1.5.0)
-- [ ] Install AWS CLI and configure credentials
-- [ ] Install Docker Desktop
-- [ ] Install Python 3.10+ with pip
-- [ ] Install Node.js 18+ and npm/yarn
-- [ ] Install Go 1.21+ (if using Go for API)
-- [ ] Clone/create project repository structure
-
-#### 1.2 AWS Account Preparation
-
-- [ ] Create/access AWS account
-- [ ] Set up IAM user with appropriate permissions (SageMaker, ECS, ECR, VPC, IAM, S3)
-- [ ] Create AWS credentials profile
-- [ ] Choose AWS region (recommend us-east-1 or us-west-2)
-- [ ] Request service quota increases if needed (SageMaker endpoints, ECS tasks)
-
-#### 1.3 Project Repository Structure
+#### 1.1 Project Repository Structure
 
 ```
 .
@@ -70,9 +52,9 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 └── docs/
 ```
 
-- [ ] Create repository structure
-- [ ] Initialize git repository
-- [ ] Create .gitignore file
+- [x] Create repository structure
+- [x] Initialize git repository
+- [x] Create .gitignore file
 
 ---
 
