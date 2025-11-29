@@ -62,15 +62,7 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 
 **Goal**: Prepare Whisper model for SageMaker deployment
 
-#### 2.1 Model Download & Testing
-
-- [ ] Download whisper-large-v3-turbo model from HuggingFace
-- [ ] Verify model.safetensors integrity
-- [ ] Test model locally with sample audio files
-- [ ] Document model input/output format
-- [ ] Measure baseline inference time and memory usage
-
-#### 2.2 SageMaker Inference Code
+#### 2.1 SageMaker Inference Code
 
 - [ ] Create `inference.py` with model loading logic
 - [ ] Implement `model_fn()` to load Whisper model
@@ -80,14 +72,14 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 - [ ] Add error handling and logging
 - [ ] Create `requirements.txt` with dependencies (transformers, torch, etc.)
 
-#### 2.3 Model Packaging
+#### 2.2 Model Packaging
 
 - [ ] Create model.tar.gz with model files and code
 - [ ] Test packaging script
 - [ ] Create S3 bucket for model artifacts
 - [ ] Upload model.tar.gz to S3
 
-#### 2.4 Docker Container (if using custom container)
+#### 2.3 Docker Container (if using custom container)
 
 - [ ] Create Dockerfile with Python base image
 - [ ] Install ML dependencies
