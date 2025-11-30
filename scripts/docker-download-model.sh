@@ -40,16 +40,46 @@ mkdir -p ml-model/whisper/model
 echo -e "\n${YELLOW}Downloading model in container...${NC}"
 echo -e "${YELLOW}This may take several minutes (model is ~3GB)${NC}"
 
-# Run download script in container with model directory mounted
+# Download model inside container to /tmp, then copy to mounted host volume
 docker-compose run --rm \
-    -v "$(pwd)/ml-model/whisper/model:/opt/ml/model:rw" \
+    -v "$(pwd)/ml-model/whisper/model:/host-model:rw" \
     ml-dev \
-    python -c "
-import sys
-sys.path.insert(0, '/opt/ml/scripts')
-from download_model import download_model
-download_model(model_name='openai/whisper-large-v3-turbo', save_dir='/opt/ml/model')
-"
+    bash -c '
+python -c "
+import os
+from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor
+import torch
+
+model_name = \"openai/whisper-large-v3-turbo\"
+save_dir = \"/tmp/whisper-model\"
+
+print(f\"Downloading {model_name}...\")
+print(f\"Save directory: {save_dir}\")
+
+os.makedirs(save_dir, exist_ok=True)
+
+device = \"cuda\" if torch.cuda.is_available() else \"cpu\"
+torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+
+print(f\"Device: {device}\")
+
+processor = AutoProcessor.from_pretrained(model_name)
+processor.save_pretrained(save_dir)
+print(\"✓ Processor downloaded\")
+
+model = AutoModelForSpeechSeq2Seq.from_pretrained(
+    model_name,
+    torch_dtype=torch_dtype,
+    low_cpu_mem_usage=True,
+)
+model.save_pretrained(save_dir)
+print(\"✓ Model downloaded\")
+print(f\"✓ Model saved to {save_dir}\")
+" && \
+echo "Copying model files to host..." && \
+cp -r /tmp/whisper-model/* /host-model/ && \
+echo "✓ Model copied to host"
+'
 
 echo -e "\n${GREEN}✓ Model downloaded successfully!${NC}"
 echo -e "${YELLOW}Model location: ml-model/whisper/model/${NC}"
