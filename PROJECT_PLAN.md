@@ -85,7 +85,7 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 - [x] Install ML dependencies
 - [x] Set up SageMaker serving framework
 - [x] Build and test container locally
-- [ ] Push to AWS ECR
+- [x] Push to AWS ECR
 
 ---
 
@@ -95,60 +95,60 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 
 #### 3.1 Core Networking
 
-- [ ] Create VPC module
-- [ ] Define public and private subnets (multi-AZ)
-- [ ] Create Internet Gateway
-- [ ] Create NAT Gateways
-- [ ] Configure route tables
-- [ ] Create security groups for SageMaker, ECS, ALB
+- [x] Create VPC module
+- [x] Define public and private subnets (multi-AZ)
+- [x] Create Internet Gateway
+- [x] Create NAT Gateways
+- [x] Configure route tables
+- [x] Create security groups for SageMaker, ECS, ALB
 
 #### 3.2 ECR Repositories
 
-- [ ] Create ECR repository for API container
-- [ ] Create ECR repository for Frontend container
-- [ ] Create ECR repository for Whisper inference (if custom)
-- [ ] Configure lifecycle policies
+- [x] Create ECR repository for API container
+- [x] Create ECR repository for Frontend container
+- [x] Create ECR repository for Whisper inference (if custom)
+- [x] Configure lifecycle policies
 
 #### 3.3 SageMaker Resources
 
-- [ ] Create IAM role for SageMaker execution
-- [ ] Define SageMaker model resource
-- [ ] Define SageMaker endpoint configuration
-  - [ ] Choose instance type (ml.g4dn.xlarge or ml.g5.xlarge recommended)
-  - [ ] Configure auto-scaling settings
-- [ ] Define SageMaker endpoint
-- [ ] Add CloudWatch alarms for endpoint metrics
+- [x] Create IAM role for SageMaker execution
+- [x] Define SageMaker model resource
+- [x] Define SageMaker endpoint configuration
+  - [x] Choose instance type (ml.g4dn.xlarge or ml.g5.xlarge recommended)
+  - [x] Configure auto-scaling settings
+- [x] Define SageMaker endpoint
+- [x] Add CloudWatch alarms for endpoint metrics
 
 #### 3.4 ECS Cluster & Services
 
-- [ ] Create ECS cluster
-- [ ] Create IAM roles for ECS tasks
-- [ ] Define task definitions for API service
-- [ ] Define task definitions for Frontend service
-- [ ] Create ECS services with desired count
-- [ ] Configure auto-scaling policies
+- [x] Create ECS cluster
+- [x] Create IAM roles for ECS tasks
+- [x] Define task definitions for API service
+- [x] Define task definitions for Frontend service
+- [x] Create ECS services with desired count
+- [x] Configure auto-scaling policies
 
 #### 3.5 Load Balancing
 
-- [ ] Create Application Load Balancer (ALB)
-- [ ] Create target groups for API and Frontend
-- [ ] Configure health checks
-- [ ] Set up listeners and routing rules
-- [ ] Configure SSL/TLS certificates (ACM)
+- [x] Create Application Load Balancer (ALB)
+- [x] Create target groups for API and Frontend
+- [x] Configure health checks
+- [x] Set up listeners and routing rules
+- [x] Configure SSL/TLS certificates (ACM)
 
 #### 3.6 Additional Resources
 
-- [ ] Create S3 bucket for audio uploads (optional)
-- [ ] Create CloudWatch Log Groups
-- [ ] Configure IAM policies for cross-service communication
-- [ ] Set up CloudWatch dashboards
+- [x] Create S3 bucket for audio uploads (optional)
+- [x] Create CloudWatch Log Groups
+- [x] Configure IAM policies for cross-service communication
+- [x] Set up CloudWatch dashboards
 
 #### 3.7 Terraform Testing
 
-- [ ] Run `terraform init`
-- [ ] Run `terraform plan`
-- [ ] Validate all resource configurations
-- [ ] Document terraform outputs (endpoints, URLs)
+- [x] Run `terraform init`
+- [x] Run `terraform plan`
+- [x] Validate all resource configurations
+- [x] Document terraform outputs (endpoints, URLs)
 
 ---
 
