@@ -96,11 +96,11 @@ Thumbs.db
 .dockerignore
 
 # Model files (too large for git)
-ml-model/whisper/model/*.safetensors
-ml-model/whisper/model/*.bin
-ml-model/whisper/model/*.pt
-ml-model/whisper/model/*.pth
+ml-model/whisper/model/
+ml-model/output/
+ml-model/venv/
 model.tar.gz
+benchmark_results.json
 
 # Logs
 *.log

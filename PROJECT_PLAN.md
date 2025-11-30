@@ -64,13 +64,13 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 
 #### 2.1 SageMaker Inference Code
 
-- [ ] Create `inference.py` with model loading logic
-- [ ] Implement `model_fn()` to load Whisper model
-- [ ] Implement `input_fn()` to handle audio input (base64, raw bytes, S3 URLs)
-- [ ] Implement `predict_fn()` for transcription
-- [ ] Implement `output_fn()` to format JSON response
-- [ ] Add error handling and logging
-- [ ] Create `requirements.txt` with dependencies (transformers, torch, etc.)
+- [x] Create `inference.py` with model loading logic
+- [x] Implement `model_fn()` to load Whisper model
+- [x] Implement `input_fn()` to handle audio input (base64, raw bytes, S3 URLs)
+- [x] Implement `predict_fn()` for transcription
+- [x] Implement `output_fn()` to format JSON response
+- [x] Add error handling and logging
+- [x] Create `requirements.txt` with dependencies (transformers, torch, etc.)
 
 #### 2.2 Model Packaging
 
