@@ -74,8 +74,8 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 
 #### 2.2 Model Packaging
 
-- [ ] Create model.tar.gz with model files and code
-- [ ] Test packaging script
+- [x] Create model.tar.gz with model files and code
+- [x] Test packaging script
 - [ ] Create S3 bucket for model artifacts
 - [ ] Upload model.tar.gz to S3
 
