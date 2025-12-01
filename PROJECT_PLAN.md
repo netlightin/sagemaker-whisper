@@ -158,43 +158,43 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 
 #### 4.1 API Setup (Golang)
 
-- [ ] Initialize project (go mod init)
-- [ ] Set up project structure (routes, handlers, middleware)
-- [ ] Configure environment variables
-- [ ] Set up logging framework
+- [x] Initialize project (go mod init)
+- [x] Set up project structure (routes, handlers, middleware)
+- [x] Configure environment variables
+- [x] Set up logging framework
 
 #### 4.2 Core API Endpoints
 
-- [ ] **POST /transcribe** - Accept audio file and return transcription
-  - [ ] Validate audio format (mp3, wav, m4a, etc.)
-  - [ ] Validate file size limits
-  - [ ] Handle multipart/form-data uploads
-- [ ] **GET /health** - Health check endpoint
-- [ ] **GET /status/:jobId** - Check transcription status (if async)
+- [x] **POST /transcribe** - Accept audio file and return transcription
+  - [x] Validate audio format (mp3, wav, m4a, etc.)
+  - [x] Validate file size limits
+  - [x] Handle multipart/form-data uploads
+- [x] **GET /health** - Health check endpoint
+- [x] **GET /status/:jobId** - Check transcription status (if async)
 
 #### 4.3 SageMaker Integration
 
-- [ ] Install AWS SDK (aws-sdk-go or @aws-sdk/client-sagemaker-runtime)
-- [ ] Implement SageMaker InvokeEndpoint calls
-- [ ] Handle audio preprocessing (encoding, format conversion)
-- [ ] Parse and format SageMaker responses
+- [x] Install AWS SDK (aws-sdk-go or @aws-sdk/client-sagemaker-runtime)
+- [x] Implement SageMaker InvokeEndpoint calls
+- [x] Handle audio preprocessing (encoding, format conversion)
+- [x] Parse and format SageMaker responses
 - [ ] Implement retry logic and error handling
 - [ ] Add request timeout handling
 
 #### 4.4 Additional Features
 
 - [ ] Implement rate limiting
-- [ ] Add CORS configuration
+- [x] Add CORS configuration
 - [ ] Implement authentication/API keys (optional)
-- [ ] Add request logging and metrics
+- [x] Add request logging and metrics
 - [ ] Implement caching for repeated requests (optional)
 
 #### 4.5 Testing & Containerization
 
 - [ ] Write unit tests for handlers
 - [ ] Write integration tests for SageMaker calls
-- [ ] Create Dockerfile for API
-- [ ] Build and test Docker image locally
+- [x] Create Dockerfile for API
+- [x] Build and test Docker image locally
 - [ ] Push image to ECR
 
 ---
