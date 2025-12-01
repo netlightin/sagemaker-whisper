@@ -195,7 +195,7 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 - [ ] Write integration tests for SageMaker calls
 - [x] Create Dockerfile for API
 - [x] Build and test Docker image locally
-- [ ] Push image to ECR
+- [x] Push image to ECR
 
 ---
 
@@ -205,46 +205,46 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 
 #### 5.1 Next.js Project Setup
 
-- [ ] Initialize Next.js project with TypeScript
-- [ ] Install dependencies (react, next, tailwind, etc.)
-- [ ] Configure SSR settings
-- [ ] Set up environment variables
+- [x] Initialize Next.js project with TypeScript
+- [x] Install dependencies (react, next, tailwind, etc.)
+- [x] Configure SSR settings
+- [x] Set up environment variables
 
 #### 5.2 UI Components
 
-- [ ] Create landing page
-- [ ] Build audio upload component
-  - [ ] Drag-and-drop file upload
-  - [ ] File format validation
-  - [ ] Upload progress indicator
+- [x] Create landing page
+- [x] Build audio upload component
+  - [x] Drag-and-drop file upload
+  - [x] File format validation
+  - [x] Upload progress indicator
 - [ ] Build audio recorder component (optional)
-- [ ] Create transcription results display
-- [ ] Add loading states and error handling
-- [ ] Implement responsive design
+- [x] Create transcription results display
+- [x] Add loading states and error handling
+- [x] Implement responsive design
 
 #### 5.3 API Integration
 
-- [ ] Create API client service
-- [ ] Implement file upload to API endpoint
-- [ ] Handle transcription responses
-- [ ] Display real-time status updates
-- [ ] Add error handling and user feedback
+- [x] Create API client service
+- [x] Implement file upload to API endpoint
+- [x] Handle transcription responses
+- [x] Display real-time status updates
+- [x] Add error handling and user feedback
 
 #### 5.4 Additional Features
 
-- [ ] Add download transcription feature (JSON, TXT)
+- [x] Add download transcription feature (JSON, TXT)
 - [ ] Implement transcription history (optional)
 - [ ] Add audio playback with timestamp highlighting (optional)
 - [ ] Create settings/configuration page
 
 #### 5.5 Testing & Containerization
 
-- [ ] Test SSR functionality
-- [ ] Test client-side interactions
-- [ ] Create Dockerfile for Next.js app
-- [ ] Optimize build for production
-- [ ] Build and test Docker image locally
-- [ ] Push image to ECR
+- [x] Test SSR functionality
+- [x] Test client-side interactions
+- [x] Create Dockerfile for Next.js app
+- [x] Optimize build for production
+- [x] Build and test Docker image locally
+- [x] Push image to ECR
 
 ---
 

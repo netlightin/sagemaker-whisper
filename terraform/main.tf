@@ -22,6 +22,7 @@ module "networking" {
   source = "./modules/networking"
 
   project_name          = var.project_name
+  aws_region            = var.aws_region
   vpc_cidr              = var.vpc_cidr
   availability_zones    = var.availability_zones
   public_subnet_cidrs   = var.public_subnet_cidrs
@@ -41,19 +42,6 @@ module "networking" {
 }
 
 # ECR Repositories
-module "ecr_whisper" {
-  source = "./modules/ecr"
-
-  repository_name                  = "${var.project_name}-whisper"
-  image_tag_mutability             = "MUTABLE"
-  scan_on_push                     = true
-  enable_default_lifecycle_policy  = true
-  max_image_count                  = 10
-  untagged_image_days              = 7
-
-  tags = var.common_tags
-}
-
 module "ecr_api" {
   source = "./modules/ecr"
 
@@ -87,7 +75,8 @@ module "sagemaker" {
   project_name         = var.project_name
   model_bucket_name    = var.model_bucket_name
   model_data_url       = var.model_data_url
-  inference_image_uri  = module.ecr_whisper.repository_url
+  # Using AWS Deep Learning Container for HuggingFace inference
+  inference_image_uri  = "763104351884.dkr.ecr.${var.aws_region}.amazonaws.com/huggingface-pytorch-inference:2.1.0-transformers4.37.0-gpu-py310-cu118-ubuntu20.04"
   instance_type        = var.sagemaker_instance_type
   initial_instance_count = var.sagemaker_initial_instance_count
 
