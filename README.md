@@ -1,206 +1,212 @@
-# Whisper on AWS SageMaker
+# Whisper SageMaker - Speech-to-Text Transcription Service
 
-Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker.
+A production-ready speech-to-text transcription service powered by OpenAI's Whisper Large V3 Turbo model, deployed on AWS SageMaker with a modern web interface.
+
+## Features
+
+- **Accurate Transcription**: Powered by Whisper Large V3 Turbo
+- **Multiple Audio Formats**: Supports MP3, WAV, M4A, FLAC, OGG, WebM
+- **Real-time Processing**: Fast GPU-accelerated transcription
+- **User-Friendly Interface**: Modern web UI built with Next.js
+- **Scalable Architecture**: Auto-scaling infrastructure
+- **Production-Ready**: Full monitoring and logging
+
+## Application URL
+
+**http://whisper-sagemaker-alb-299033305.eu-west-1.elb.amazonaws.com**
 
 ## Quick Start
 
-All development happens in Docker containers to keep your system clean.
+### Using the Web Interface
 
-### 1. Download Model (First Time)
+1. Navigate to the application URL above
+2. Upload an audio file (drag-and-drop or click to select)
+3. Click "Transcribe" and wait for results
+4. Copy or download the transcription
 
-```bash
-chmod +x scripts/*.sh
-./scripts/docker-download-model.sh
-```
-
-### 2. Run Tests
+### Using the API
 
 ```bash
-./scripts/docker-test.sh
+curl -X POST http://whisper-sagemaker-alb-299033305.eu-west-1.elb.amazonaws.com/transcribe \
+  -F "audio=@your_file.mp3"
 ```
 
----
+## Supported Formats
 
-## Scripts
+| Format | Extension | Max Size | Max Duration |
+|--------|-----------|----------|--------------|
+| MP3 | .mp3 | 100MB | 5 minutes |
+| WAV | .wav | 100MB | 5 minutes |
+| M4A | .m4a | 100MB | 5 minutes |
+| FLAC | .flac | 100MB | 5 minutes |
+| OGG | .ogg | 100MB | 5 minutes |
+| WebM | .webm | 100MB | 5 minutes |
 
-### `scripts/docker-download-model.sh`
+## Documentation
 
-Downloads the Whisper model (~3GB) inside a Docker container.
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - System architecture and components
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment procedures and runbooks
+- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Common issues and solutions
+- **[PROJECT_PLAN.md](./PROJECT_PLAN.md)** - Development roadmap
 
-**What it does:**
-- Builds Docker image
-- Downloads model from HuggingFace
-- Saves to `ml-model/whisper/model/`
+## API Endpoints
 
-**Usage:**
+### Health Check
 ```bash
-./scripts/docker-download-model.sh
+GET /health
 ```
 
-**When to use:** First time setup, or to re-download the model.
+**Response:**
+```json
+{
+  "status": "healthy",
+  "endpoint": "whisper-sagemaker-whisper-endpoint"
+}
+```
 
----
-
-### `scripts/docker-test.sh`
-
-Runs SageMaker inference tests in a Docker container.
-
-**What it does:**
-- Builds test Docker image
-- Runs `test_inference.py`
-- Tests all SageMaker functions (model_fn, input_fn, predict_fn, output_fn)
-
-**Usage:**
+### Transcribe Audio
 ```bash
-./scripts/docker-test.sh
+POST /transcribe
+Content-Type: multipart/form-data
 ```
 
-**When to use:** After downloading model, or after code changes.
+**Parameters:**
+- `audio` (file, required): Audio file to transcribe
 
-**Expected output:**
-```
-✓ model_fn() succeeded
-✓ input_fn() with JSON succeeded
-✓ predict_fn() succeeded
-✓ output_fn() with JSON succeeded
-✓ ALL TESTS PASSED
-```
-
----
-
-### `scripts/docker-dev.sh`
-
-Opens an interactive development shell in a Docker container.
-
-**What it does:**
-- Builds development Docker image
-- Starts bash shell with Python environment
-- Mounts code directories as volumes
-
-**Usage:**
-```bash
-./scripts/docker-dev.sh
+**Response:**
+```json
+{
+  "text": "Transcribed text...",
+  "language": "en",
+  "duration": 45.2
+}
 ```
 
-**Inside the container:**
-```bash
-# View model files
-ls /opt/ml/model/
+## Technology Stack
 
-# Run tests manually
-python scripts/test_inference.py
+- **Frontend**: Next.js 16, TypeScript, Tailwind CSS
+- **Backend**: Go 1.24, AWS SDK v2
+- **ML Model**: Whisper Large V3 Turbo on SageMaker
+- **Infrastructure**: AWS (ECS Fargate, SageMaker, ALB, VPC)
+- **IaC**: Terraform
 
-# Exit
-exit
+## Architecture
+
+```
+Internet → ALB → [Frontend | API] → SageMaker → S3
 ```
 
-**When to use:** For debugging or manual testing.
+- **VPC**: Multi-AZ with public/private subnets
+- **ECS Fargate**: API (Go) and Frontend (Next.js)
+- **SageMaker**: ml.g4dn.xlarge with Whisper model
+- **Auto-scaling**: ECS (1-10 tasks), SageMaker (1-3 instances)
 
----
-
-## Running Docker Containers
-
-### Using Helper Scripts (Recommended)
+## Deployment
 
 ```bash
-# Download model
-./scripts/docker-download-model.sh
+# 1. Package model
+cd ml-model
+python scripts/download_and_package_model.py --s3-bucket BUCKET_NAME
 
-# Run tests
-./scripts/docker-test.sh
+# 2. Build images
+cd api && docker build -t api . && docker push ECR_URL/api
+cd frontend && docker build -t frontend . && docker push ECR_URL/frontend
 
-# Development shell
-./scripts/docker-dev.sh
+# 3. Deploy
+cd terraform && terraform apply
 ```
 
-### Using Docker Compose Directly
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
 
+## Monitoring
+
+- **Dashboard**: [whisper-sagemaker-dashboard](https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#dashboards:name=whisper-sagemaker-dashboard)
+- **Logs**: CloudWatch `/ecs/whisper-sagemaker`
+- **Metrics**: SageMaker latency, ECS CPU/memory, ALB requests
+
+## Known Issues
+
+1. **SageMaker Model Issue**: Numpy dependency error - under investigation
+2. **No HTTPS**: HTTP only (HTTPS planned)
+3. **No Authentication**: Publicly accessible (authentication planned)
+
+See [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) for solutions.
+
+## Cost Estimate
+
+- **24/7 Operation**: ~$650-700/month
+- **Business Hours Only**: ~$250-300/month
+
+Primary costs: SageMaker ml.g4dn.xlarge ($0.736/hour), NAT Gateways, ECS Fargate
+
+## Project Structure
+
+```
+.
+├── api/                    # Go API service
+├── frontend/               # Next.js frontend
+├── ml-model/               # Model packaging scripts
+├── terraform/              # Infrastructure as Code
+│   ├── modules/
+│   │   ├── networking/
+│   │   ├── ecr/
+│   │   ├── ecs/
+│   │   └── sagemaker/
+│   └── main.tf
+├── ARCHITECTURE.md         # Architecture documentation
+├── DEPLOYMENT.md           # Deployment guide
+├── TROUBLESHOOTING.md      # Troubleshooting guide
+└── PROJECT_PLAN.md         # Project roadmap
+```
+
+## Development
+
+### Local API Development
 ```bash
-# Run tests
-docker-compose run --rm ml-test
-
-# Start dev shell
-docker-compose run --rm ml-dev bash
-
-# Start inference server (SageMaker-like)
-docker-compose up ml-inference
+cd api
+go mod download
+go run main.go
 ```
 
-### Docker Compose Services
-
-**`ml-dev`** - Development environment
-- Interactive bash shell
-- All dev tools included (ipython, pytest, black)
-
-**`ml-test`** - Test runner
-- Runs `test_inference.py` automatically
-- Validates SageMaker inference pipeline
-
-**`ml-inference`** - SageMaker-like server
-- Listens on port 8080
-- Simulates production deployment
-
----
-
-## Dockerfile Stages
-
-The `ml-model/Dockerfile` uses multi-stage builds:
-
-**`base`** - Core dependencies
-- Python 3.11 + system libraries
-- ML packages (transformers, torch)
-
-**`development`** - Dev tools
-- Inherits from base
-- Adds ipython, jupyter, pytest, black, flake8
-
-**`sagemaker`** - Production image
-- Minimal image for deployment
-- Only inference code + model
-
-Build specific stage:
+### Local Frontend Development
 ```bash
-docker build --target development -t whisper-dev ml-model/
-docker build --target sagemaker -t whisper-inference ml-model/
+cd frontend
+npm install
+npm run dev
 ```
 
----
-
-## Troubleshooting
-
-**Docker not running:**
+### Infrastructure Changes
 ```bash
-docker info  # Check status
-# Start Docker Desktop if needed
+cd terraform
+terraform plan
+terraform apply
 ```
 
-**Permission denied:**
-```bash
-chmod +x scripts/*.sh
-```
+## Security
 
-**Model not found:**
-```bash
-./scripts/docker-download-model.sh
-```
+- Services in private subnets
+- Security groups with least-privilege access
+- IAM roles (no hardcoded credentials)
+- Audio not persisted (processed in memory)
 
-**Clean up Docker:**
-```bash
-docker-compose down          # Stop containers
-docker system prune -a       # Clean up resources
-```
+**Production Recommendations**:
+- Enable HTTPS with ACM
+- Add API authentication
+- Enable WAF and CloudTrail
+- Implement rate limiting
 
----
+## License
 
-## What's Git-Ignored
+[Specify your license]
 
-These are generated in containers and not committed:
-- `ml-model/whisper/model/` - Model files (~3GB)
-- `ml-model/venv/` - Virtual environments
-- `ml-model/output/` - Generated files
+## Support
 
----
+- **Documentation**: See markdown files in repository
+- **Issues**: Check TROUBLESHOOTING.md
+- **AWS Support**: For infrastructure issues
 
-## Project Details
+## Acknowledgments
 
-See [PROJECT_PLAN.md](PROJECT_PLAN.md) for full project roadmap.
+- OpenAI for Whisper model
+- HuggingFace for transformers library
+- AWS for SageMaker and infrastructure services
