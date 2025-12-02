@@ -254,42 +254,42 @@ Deploy OpenAI's Whisper Large V3 Turbo model to AWS SageMaker with a full-stack 
 
 #### 6.1 Initial Terraform Deployment
 
-- [ ] Run `terraform apply` to create infrastructure
-- [ ] Verify VPC and networking resources
-- [ ] Verify ECR repositories created
-- [ ] Document all created resource IDs
+- [x] Run `terraform apply` to create infrastructure
+- [x] Verify VPC and networking resources
+- [x] Verify ECR repositories created
+- [x] Document all created resource IDs
 
 #### 6.2 Deploy SageMaker Model
 
-- [ ] Ensure model artifacts are in S3
-- [ ] Apply SageMaker terraform resources
-- [ ] Wait for endpoint to be InService
-- [ ] Test endpoint with AWS CLI/SDK
-- [ ] Verify endpoint metrics in CloudWatch
+- [x] Ensure model artifacts are in S3
+- [x] Apply SageMaker terraform resources
+- [x] Wait for endpoint to be InService
+- [x] Test endpoint with AWS CLI/SDK
+- [x] Verify endpoint metrics in CloudWatch
 
 #### 6.3 Deploy API Service
 
-- [ ] Build API Docker image
-- [ ] Tag and push to ECR
-- [ ] Apply ECS terraform for API service
-- [ ] Verify ECS tasks are running
-- [ ] Test API health endpoint
-- [ ] Test /transcribe endpoint with sample audio
+- [x] Build API Docker image
+- [x] Tag and push to ECR
+- [x] Apply ECS terraform for API service
+- [x] Verify ECS tasks are running
+- [x] Test API health endpoint
+- [x] Test /transcribe endpoint with sample audio
 
 #### 6.4 Deploy Frontend Service
 
-- [ ] Build Frontend Docker image
-- [ ] Tag and push to ECR
-- [ ] Apply ECS terraform for Frontend service
-- [ ] Verify ECS tasks are running
-- [ ] Test frontend via ALB URL
+- [x] Build Frontend Docker image
+- [x] Tag and push to ECR
+- [x] Apply ECS terraform for Frontend service
+- [x] Verify ECS tasks are running
+- [x] Test frontend via ALB URL
 - [ ] Verify SSR is working
 
 #### 6.5 Configure Load Balancer
 
-- [ ] Verify ALB routing rules
-- [ ] Test API routes through ALB
-- [ ] Test frontend routes through ALB
+- [x] Verify ALB routing rules
+- [x] Test API routes through ALB
+- [x] Test frontend routes through ALB
 - [ ] Configure custom domain (optional)
 - [ ] Set up SSL certificate
 
