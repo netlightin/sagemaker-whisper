@@ -1,0 +1,18 @@
+# Core ML Dependencies
+transformers>=4.35.0
+torch>=2.0.0
+torchaudio>=2.0.0
+
+# Model optimization
+accelerate>=0.20.0
+
+# Audio processing
+librosa>=0.10.0
+soundfile>=0.12.0
+
+# SageMaker and AWS
+boto3>=1.28.0
+sagemaker>=2.180.0
+
+# Utilities
+numpy>=1.24.0

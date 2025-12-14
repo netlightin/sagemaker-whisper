@@ -1,0 +1,32 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies (including all required packages)
+RUN pip install --no-cache-dir \
+    transformers==4.37.0 \
+    torch==2.1.0 \
+    torchaudio==2.1.0 \
+    soundfile \
+    librosa \
+    scipy \
+    boto3 \
+    huggingface_hub
+
+# Copy all necessary files for packaging
+COPY scripts/download_and_package_model.py ./scripts/
+COPY whisper/inference.py ./whisper/
+COPY serve_flask.py .
+COPY serve .
+
+# Make serve executable
+RUN chmod +x serve
+
+# Set entry point to the download script
+ENTRYPOINT ["python", "scripts/download_and_package_model.py"]

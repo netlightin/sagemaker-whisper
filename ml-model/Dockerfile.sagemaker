@@ -1,0 +1,84 @@
+# Production SageMaker Inference Container for Whisper
+# Uses Python 3.10 base with CUDA support for GPU inference
+
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=TRUE
+ENV PYTHONDONTWRITEBYTECODE=TRUE
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies (NO JAVA NEEDED!)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.10 \
+    python3.10-dev \
+    python3-pip \
+    libsndfile1 \
+    ffmpeg \
+    libavcodec-extra \
+    curl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create symbolic links for python
+RUN ln -sf /usr/bin/python3.10 /usr/bin/python && \
+    ln -sf /usr/bin/python3.10 /usr/bin/python3
+
+# Upgrade pip
+RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Install PyTorch with CUDA support (matching SageMaker GPU instances)
+RUN pip install --no-cache-dir \
+    torch==2.1.0 \
+    torchaudio==2.1.0 \
+    --index-url https://download.pytorch.org/whl/cu118
+
+# Install numpy explicitly first to avoid conflicts
+RUN pip install --no-cache-dir numpy==1.24.3
+
+# Install transformers and other ML dependencies
+RUN pip install --no-cache-dir \
+    transformers==4.37.0 \
+    accelerate==0.25.0
+
+# Install audio processing libraries
+RUN pip install --no-cache-dir \
+    librosa==0.10.1 \
+    soundfile==0.12.1 \
+    scipy==1.11.4
+
+# Install Flask for serving (lightweight, no Java!)
+RUN pip install --no-cache-dir \
+    flask==3.0.0 \
+    gunicorn==21.2.0
+
+# Create necessary directories
+RUN mkdir -p /opt/ml/model /opt/ml/code
+
+# Set working directory
+WORKDIR /opt/ml/code
+
+# Copy inference scripts
+COPY whisper/inference.py /opt/ml/code/inference.py
+COPY serve_flask.py /opt/ml/code/serve_flask.py
+COPY serve /opt/ml/code/serve
+
+# Make serve script executable
+RUN chmod +x /opt/ml/code/serve
+
+# Set environment variables for SageMaker
+ENV SAGEMAKER_PROGRAM=serve_flask.py
+ENV PATH="/opt/ml/code:/usr/local/bin:${PATH}"
+
+# Expose port 8080 for SageMaker inference
+EXPOSE 8080
+
+# Health check - test the /ping endpoint
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
+    CMD curl -f http://localhost:8080/ping || exit 1
+
+# Override NVIDIA entrypoint and set our own
+ENTRYPOINT []
+
+# Entry point - start Flask server via serve script
+CMD ["serve"]

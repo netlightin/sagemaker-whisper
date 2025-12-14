@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # ML model development and testing environment
+  ml-dev:
+    build:
+      context: ./ml-model
+      target: development
+    container_name: whisper-ml-dev
+    volumes:
+      # Mount model directory (read-only to prevent accidental modification)
+      - ./ml-model/whisper/model:/opt/ml/model:ro
+      # Mount scripts for testing
+      - ./ml-model/scripts:/opt/ml/scripts:rw
+      # Mount output directory for generated files
+      - ./ml-model/output:/opt/ml/output:rw
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MODEL_DIR=/opt/ml/model
+    working_dir: /opt/ml
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+
+  # SageMaker-like inference environment for testing
+  ml-inference:
+    build:
+      context: ./ml-model
+      target: sagemaker
+    container_name: whisper-ml-inference
+    volumes:
+      # Mount model directory
+      - ./ml-model/whisper/model:/opt/ml/model:ro
+      # Mount inference code
+      - ./ml-model/whisper/inference.py:/opt/ml/code/inference.py:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MODEL_DIR=/opt/ml/model
+    ports:
+      - "8080:8080"
+    command: -m inference
+
+  # Standalone test runner
+  ml-test:
+    build:
+      context: ./ml-model
+      target: development
+    container_name: whisper-ml-test
+    volumes:
+      - ./ml-model/whisper:/opt/ml/code/whisper:ro
+      - ./ml-model/scripts:/opt/ml/scripts:ro
+      - ./ml-model/whisper/model:/opt/ml/model:ro
+      - ./ml-model/output:/opt/ml/output:rw
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/opt/ml
+    working_dir: /opt/ml
+    command: python scripts/test_inference.py

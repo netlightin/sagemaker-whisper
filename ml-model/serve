@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+"""
+SageMaker serving entry point.
+This script starts the Flask inference server.
+"""
+
+import sys
+import os
+
+# Add code directory to path
+sys.path.insert(0, '/opt/ml/code')
+
+# Start the Flask server
+if __name__ == '__main__':
+    # Import and run the Flask app
+    from serve_flask import app
+
+    # Get port from environment or default to 8080
+    port = int(os.environ.get('SAGEMAKER_BIND_TO_PORT', 8080))
+
+    print(f"Starting Flask server on port {port}...")
+    app.run(host='0.0.0.0', port=port, threaded=True)
