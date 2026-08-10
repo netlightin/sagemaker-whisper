@@ -4,13 +4,11 @@ import clsx from 'clsx'
 
 interface StatusDisplayProps {
   isRecording: boolean
-  queueLength: number
   currentFiles: string[]
 }
 
 export default function StatusDisplay({
   isRecording,
-  queueLength,
   currentFiles,
 }: StatusDisplayProps) {
   return (

@@ -44,8 +44,10 @@ impl AudioRecorder {
             "-f", "avfoundation",
             "-audio_device_index", "0",  // MacBook Pro Microphone
             "-i", "none",  // No video input, audio only
+            "-af", "anlmdn,volume=3.0,highpass=f=100,lowpass=f=12000,loudnorm=I=-15:TP=-0.3:LRA=11",  // Noise reduction + high volume boost + filters + aggressive loudness normalization
             "-codec:a", "libmp3lame",
-            "-b:a", "128k",
+            "-b:a", "320k",  // Maximum bitrate for MP3 (was 256k)
+            "-q:a", "0",  // Highest MP3 quality (0 is best)
             "-f", "segment",
             "-segment_time", &self.chunk_duration.to_string(),
             "-segment_format", "mp3",

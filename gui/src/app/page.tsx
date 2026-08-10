@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
-  const { isRecording, queueLength, currentFiles, error, clearError } = useAppStore()
+  const { isRecording, currentFiles, error, clearError } = useAppStore()
 
   useTranscriptionEvents()
 
@@ -34,7 +34,6 @@ export default function Home() {
 
         <StatusDisplay
           isRecording={isRecording}
-          queueLength={queueLength}
           currentFiles={currentFiles}
         />
 
