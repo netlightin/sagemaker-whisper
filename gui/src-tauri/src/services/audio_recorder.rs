@@ -2,6 +2,7 @@ use crate::errors::{AppError, Result};
 use std::path::PathBuf;
 use std::process::{Child, Command, Stdio};
 use tokio::time::Duration;
+use chrono::Local;
 
 pub struct AudioRecorder {
     process: Option<Child>,
@@ -30,9 +31,17 @@ impl AudioRecorder {
             .await
             .map_err(|e| AppError::File(format!("Failed to create output directory: {}", e)))?;
 
+        // Get current date and time for the filename
+        let now = Local::now();
+        let date_str = now.format("%Y%m%d").to_string();
+        let time_str = now.format("%H%M%S").to_string();
+
+        // Output path with date, segment counter index, and time: chunk_YYYYMMDD_INDEX_HHMMSS.mp3
         let output_path = format!(
-            "{}/chunk_%Y%m%d_%H%M%S.mp3",
-            self.output_dir.display()
+            "{}/chunk_{}_%03d_{}.mp3",
+            self.output_dir.display(),
+            date_str,
+            time_str
         );
 
         let mut cmd = Command::new("ffmpeg");
@@ -44,14 +53,14 @@ impl AudioRecorder {
             "-f", "avfoundation",
             "-audio_device_index", "0",  // MacBook Pro Microphone
             "-i", "none",  // No video input, audio only
-            "-af", "anlmdn,volume=3.0,highpass=f=100,lowpass=f=12000,loudnorm=I=-15:TP=-0.3:LRA=11",  // Noise reduction + high volume boost + filters + aggressive loudness normalization
+            "-af", "highpass=f=150,anlmdn,lowpass=f=12000,volume=3.0,loudnorm=I=-16:TP=-1.5:LRA=11",  // Highpass removes wind + noise reduction + EQ + volume + loudness normalization
             "-codec:a", "libmp3lame",
-            "-b:a", "320k",  // Maximum bitrate for MP3 (was 256k)
+            "-b:a", "320k",  // Maximum bitrate for MP3
             "-q:a", "0",  // Highest MP3 quality (0 is best)
             "-f", "segment",
             "-segment_time", &self.chunk_duration.to_string(),
             "-segment_format", "mp3",
-            "-strftime", "1",  // Enable strftime time format codes in filename
+            "-segment_start_number", "1",  // Start segment numbering from 1 instead of 0
             "-reset_timestamps", "1",
         ])
         .arg(&output_path)
