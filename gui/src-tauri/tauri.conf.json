@@ -1,5 +1,5 @@
 {
-  "productName": "Audio Transcriber",
+  "productName": "Rex",
   "version": "0.1.0",
   "identifier": "com.audiotranscriber.app",
   "build": {
@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "Audio Transcriber",
+        "title": "Rex",
         "width": 600,
         "height": 700,
         "minWidth": 600,
