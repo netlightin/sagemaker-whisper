@@ -2,7 +2,6 @@ use crate::errors::{AppError, Result};
 use std::path::PathBuf;
 use std::process::{Child, Command, Stdio};
 use tokio::time::Duration;
-use chrono::Local;
 
 pub struct AudioRecorder {
     process: Option<Child>,
@@ -31,17 +30,9 @@ impl AudioRecorder {
             .await
             .map_err(|e| AppError::File(format!("Failed to create output directory: {}", e)))?;
 
-        // Get current date and time for the filename
-        let now = Local::now();
-        let date_str = now.format("%Y%m%d").to_string();
-        let time_str = now.format("%H%M%S").to_string();
-
-        // Output path with date, segment counter index, and time: chunk_YYYYMMDD_INDEX_HHMMSS.mp3
         let output_path = format!(
-            "{}/chunk_{}_%03d_{}.mp3",
-            self.output_dir.display(),
-            date_str,
-            time_str
+            "{}/chunk_%d_%m_%Y__%H_%M_%S.mp3",
+            self.output_dir.display()
         );
 
         let mut cmd = Command::new("ffmpeg");
@@ -60,7 +51,7 @@ impl AudioRecorder {
             "-f", "segment",
             "-segment_time", &self.chunk_duration.to_string(),
             "-segment_format", "mp3",
-            "-segment_start_number", "1",  // Start segment numbering from 1 instead of 0
+            "-strftime", "1",  // Enable strftime time format codes in filename
             "-reset_timestamps", "1",
         ])
         .arg(&output_path)
