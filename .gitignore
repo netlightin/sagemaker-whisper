@@ -29,3 +29,12 @@ whisper-secret-standard-faster/ml-model/kb-whisper-model.tar.gz
 */**/.DS_Store
 **/.DS_Store
 .DS_Store
+
+dist/
+node_modules/
+.env
+pending/
+processed/
+transcribed/
+compiled/
+output/
