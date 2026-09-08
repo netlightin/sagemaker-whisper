@@ -1,0 +1,95 @@
+2026-08-12 00:51:18 [INFO] Connecting to OBS... 
+2026-08-12 00:51:18 [INFO] Performing health check on OBS WebSocket... 
+2026-08-12 00:51:18 [INFO] Connecting to OBS WebSocket at ws://192.168.0.39:4455 
+2026-08-12 00:51:23 [INFO] OBS WebSocket connection opened 
+2026-08-12 00:51:23 [INFO] OBS WebSocket identified and ready 
+2026-08-12 00:51:23 [INFO] Successfully connected to OBS 
+2026-08-12 00:51:23 [INFO] OBS WebSocket Version: 5.5.5 
+2026-08-12 00:51:23 [INFO] Creating output directory: ./pending 
+2026-08-12 00:51:23 [INFO] Starting OBS recording... 
+2026-08-12 00:51:23 [INFO] Recording started with 60s chunks to ./pending 
+2026-08-12 00:51:23 [WARN] Recording became inactive 
+2026-08-12 00:51:24 [INFO] Recording is active 
+2026-08-12 00:51:35 [INFO] Connecting to OBS... 
+2026-08-12 00:51:35 [INFO] Performing health check on OBS WebSocket... 
+2026-08-12 00:51:35 [INFO] Connecting to OBS WebSocket at ws://192.168.0.39:4455 
+2026-08-12 00:51:35 [INFO] OBS WebSocket connection opened 
+2026-08-12 00:51:35 [INFO] OBS WebSocket identified and ready 
+2026-08-12 00:51:35 [INFO] Successfully connected to OBS 
+2026-08-12 00:51:35 [INFO] OBS WebSocket Version: 5.5.5 
+2026-08-12 00:51:35 [INFO] Creating output directory: ./pending 
+2026-08-12 00:51:35 [INFO] Starting OBS recording... 
+2026-08-12 00:51:35 [ERROR] OBS call failed: StartRecord {"code":500,"stack":"Error\n    at OBSWebSocket.call (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/node_modules/obs-websocket-js/src/base.ts:142:10)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async OBSConnection.call (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/connection.ts:146:24)\n    at async OBSRecorder.start (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/recorder.ts:41:7)\n    at async Command.<anonymous> (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/index.ts:24:7)"}
+2026-08-12 00:51:51 [WARN] Recording became inactive 
+2026-08-12 00:51:51 [WARN] Recording became inactive 
+2026-08-12 00:51:53 [WARN] OBS is shutting down 
+2026-08-12 00:51:53 [WARN] OBS WebSocket connection closed 
+2026-08-12 00:52:12 [INFO] Connecting to OBS... 
+2026-08-12 00:52:12 [INFO] Performing health check on OBS WebSocket... 
+2026-08-12 00:52:17 [ERROR] Failed to start recording: OBS WebSocket connection timed out at 192.168.0.39:4455. Make sure OBS is running and accessible. {"stack":"Error: OBS WebSocket connection timed out at 192.168.0.39:4455. Make sure OBS is running and accessible.\n    at Socket.<anonymous> (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/connection.ts:84:11)\n    at Socket.emit (node:events:518:28)\n    at Socket._onTimeout (node:net:609:8)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"}
+2026-08-12 00:52:30 [INFO] Connecting to OBS... 
+2026-08-12 00:52:30 [INFO] Performing health check on OBS WebSocket... 
+2026-08-12 00:52:30 [INFO] Connecting to OBS WebSocket at ws://192.168.0.39:4455 
+2026-08-12 00:52:30 [INFO] OBS WebSocket connection opened 
+2026-08-12 00:52:30 [INFO] OBS WebSocket identified and ready 
+2026-08-12 00:52:30 [INFO] Successfully connected to OBS 
+2026-08-12 00:52:30 [INFO] OBS WebSocket Version: 5.5.5 
+2026-08-12 00:52:30 [INFO] Creating output directory: ./pending 
+2026-08-12 00:52:30 [INFO] Starting OBS recording... 
+2026-08-12 00:52:30 [INFO] Recording started with 60s chunks to ./pending 
+2026-08-12 00:52:31 [WARN] Recording became inactive 
+2026-08-12 00:52:31 [INFO] Recording is active 
+2026-08-12 00:53:30 [ERROR] OBS call failed: SplitRecordFile Verify that file splitting is enabled in the output settings. {"code":702,"stack":"Error: Verify that file splitting is enabled in the output settings.\n    at OBSWebSocket.call (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/node_modules/obs-websocket-js/src/base.ts:142:10)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async OBSConnection.call (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/connection.ts:146:24)\n    at async Timeout._onTimeout (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/recorder.ts:111:9)"}
+2026-08-12 00:53:30 [ERROR] Failed to split recording file: Verify that file splitting is enabled in the output settings. {"code":702,"stack":"Error: Verify that file splitting is enabled in the output settings.\n    at OBSWebSocket.call (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/node_modules/obs-websocket-js/src/base.ts:142:10)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async OBSConnection.call (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/connection.ts:146:24)\n    at async Timeout._onTimeout (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/recorder.ts:111:9)"}
+2026-08-12 00:54:16 [WARN] Recording became inactive 
+2026-08-12 00:54:16 [WARN] Recording became inactive 
+2026-08-12 00:54:18 [WARN] OBS is shutting down 
+2026-08-12 00:54:18 [WARN] OBS WebSocket connection closed 
+2026-08-12 00:54:18 [WARN] Attempting to reconnect to OBS (attempt 1/10) in 1000ms... 
+2026-08-12 00:54:19 [INFO] Performing health check on OBS WebSocket... 
+2026-08-12 00:54:30 [ERROR] Failed to split recording file: OBS WebSocket not connected {"stack":"Error: OBS WebSocket not connected\n    at OBSConnection.call (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/connection.ts:142:13)\n    at Timeout._onTimeout (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/recorder.ts:111:31)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"}
+2026-08-12 00:55:30 [ERROR] Failed to split recording file: OBS WebSocket not connected {"stack":"Error: OBS WebSocket not connected\n    at OBSConnection.call (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/connection.ts:142:13)\n    at Timeout._onTimeout (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/recorder.ts:111:31)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"}
+2026-08-12 00:56:30 [ERROR] Failed to split recording file: OBS WebSocket not connected {"stack":"Error: OBS WebSocket not connected\n    at OBSConnection.call (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/connection.ts:142:13)\n    at Timeout._onTimeout (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/recorder.ts:111:31)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"}
+2026-08-12 00:56:35 [INFO] Received SIGINT, stopping recorder... 
+2026-08-12 00:58:56 [INFO] Connecting to OBS... 
+2026-08-12 00:58:56 [INFO] Performing health check on OBS WebSocket... 
+2026-08-12 00:58:56 [INFO] Connecting to OBS WebSocket at ws://192.168.0.39:4455 
+2026-08-12 00:58:56 [INFO] OBS WebSocket connection opened 
+2026-08-12 00:58:56 [INFO] OBS WebSocket identified and ready 
+2026-08-12 00:58:56 [INFO] Successfully connected to OBS 
+2026-08-12 00:58:56 [INFO] OBS WebSocket Version: 5.5.5 
+2026-08-12 00:58:56 [INFO] Creating output directory: ./pending 
+2026-08-12 00:58:56 [INFO] Starting OBS recording... 
+2026-08-12 00:58:56 [INFO] Recording started with 60s chunks to ./pending 
+2026-08-12 00:58:56 [WARN] Recording became inactive 
+2026-08-12 00:58:56 [INFO] Recording is active 
+2026-08-12 00:59:56 [INFO] Split recording (chunk 1) 
+2026-08-12 01:00:56 [INFO] Split recording (chunk 2) 
+2026-08-12 01:01:56 [INFO] Split recording (chunk 3) 
+2026-08-12 01:02:36 [INFO] Received SIGINT, stopping recorder... 
+2026-08-12 01:02:36 [INFO] Stopping OBS recording... 
+2026-08-12 01:02:36 [INFO] Disconnecting from OBS... 
+2026-08-12 01:02:36 [WARN] Recording became inactive 
+2026-08-12 01:02:36 [WARN] OBS WebSocket connection closed 
+2026-08-12 10:27:13 [INFO] Connecting to OBS... 
+2026-08-12 10:27:13 [INFO] Performing health check on OBS WebSocket... 
+2026-08-12 10:27:18 [ERROR] Failed to start recording: OBS WebSocket connection timed out at 192.168.0.39:4455. Make sure OBS is running and accessible. {"stack":"Error: OBS WebSocket connection timed out at 192.168.0.39:4455. Make sure OBS is running and accessible.\n    at Socket.<anonymous> (/Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/obs/src/connection.ts:84:11)\n    at Socket.emit (node:events:518:28)\n    at Socket._onTimeout (node:net:609:8)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)"}
+2026-08-12 10:28:44 [INFO] Connecting to OBS... 
+2026-08-12 10:28:44 [INFO] Performing health check on OBS WebSocket... 
+2026-08-12 10:28:44 [INFO] Connecting to OBS WebSocket at ws://10.80.20.107:4455 
+2026-08-12 10:28:44 [INFO] OBS WebSocket connection opened 
+2026-08-12 10:28:44 [INFO] OBS WebSocket identified and ready 
+2026-08-12 10:28:44 [INFO] Successfully connected to OBS 
+2026-08-12 10:28:44 [INFO] OBS WebSocket Version: 5.5.5 
+2026-08-12 10:28:44 [INFO] Creating output directory: ./pending 
+2026-08-12 10:28:44 [INFO] Starting OBS recording... 
+2026-08-12 10:28:44 [INFO] Recording started continuously to ./pending 
+2026-08-12 10:28:45 [WARN] Recording became inactive 
+2026-08-12 10:28:45 [INFO] Recording is active 
+2026-08-12 10:29:01 [WARN] Recording became inactive 
+2026-08-12 10:29:02 [WARN] Recording became inactive 
+2026-08-12 10:29:09 [WARN] OBS is shutting down 
+2026-08-12 10:29:09 [WARN] OBS WebSocket connection closed 
+2026-08-12 10:29:09 [WARN] Attempting to reconnect to OBS (attempt 1/10) in 1000ms... 
+2026-08-12 10:29:10 [INFO] Performing health check on OBS WebSocket... 
+2026-08-12 10:29:11 [INFO] Received SIGINT, stopping recorder... 
