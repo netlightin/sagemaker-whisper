@@ -1,0 +1,11 @@
+### Transcribe audio file
+POST http://loud-meadow-alb-1144783473.eu-west-1.elb.amazonaws.com/transcribe
+x-api-key: e20ce61a459e49ed9319ceab0f72b5d1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="audio"; filename="b.mp3"
+Content-Type: audio/mpeg
+
+< /Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/whisper-secret-standard/b.mp3
+--boundary--
