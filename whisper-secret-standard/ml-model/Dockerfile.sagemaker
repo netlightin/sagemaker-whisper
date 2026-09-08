@@ -47,10 +47,11 @@ RUN pip install --no-cache-dir \
     soundfile==0.12.1 \
     scipy==1.11.4
 
-# Install Flask for serving (lightweight, no Java!)
+# Install Flask for serving (lightweight, no Java!) and boto3 for S3 access
 RUN pip install --no-cache-dir \
     flask==3.0.0 \
-    gunicorn==21.2.0
+    gunicorn==21.2.0 \
+    boto3==1.34.0
 
 # Create necessary directories
 RUN mkdir -p /opt/ml/model /opt/ml/code

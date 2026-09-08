@@ -146,9 +146,12 @@ def input_fn(
         sample_rate = DEFAULT_SAMPLE_RATE
 
         if content_type == "application/json":
-            # Parse JSON input
+            # Parse JSON input - handle both bytes and pre-parsed dict (from Flask)
             try:
-                data = json.loads(request_body.decode("utf-8"))
+                if isinstance(request_body, dict):
+                    data = request_body
+                else:
+                    data = json.loads(request_body.decode("utf-8"))
             except json.JSONDecodeError as e:
                 raise ValueError(f"Invalid JSON: {str(e)}")
 
