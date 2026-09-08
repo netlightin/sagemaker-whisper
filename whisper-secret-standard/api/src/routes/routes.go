@@ -25,6 +25,10 @@ func SetupRoutes(cfg *config.Config, logger *utils.Logger) http.Handler {
 	protectedMux.HandleFunc("/load-test", h.Test)
 	logger.Info("Registering /load-test/status endpoint (protected)")
 	protectedMux.HandleFunc("/load-test/status", h.TestStatus)
+	logger.Info("Registering /batch-transcribe endpoint (protected)")
+	protectedMux.HandleFunc("/batch-transcribe", h.BatchTranscribe)
+	logger.Info("Registering /batch-transcribe/status endpoint (protected)")
+	protectedMux.HandleFunc("/batch-transcribe/status", h.BatchTranscribeStatus)
 
 	// Protected routes with auth middleware
 	protectedHandler := middleware.CORS(cfg)(

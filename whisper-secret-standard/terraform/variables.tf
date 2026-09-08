@@ -210,3 +210,10 @@ variable "api_cpu_target" {
   default     = 70
 }
 
+# S3 Batch Transcription Configuration
+variable "transcription_bucket_name" {
+  description = "S3 bucket name for batch transcription (leave empty to disable)"
+  type        = string
+  default     = ""
+}
+

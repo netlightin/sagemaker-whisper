@@ -75,3 +75,10 @@ variable "target_group_arn" {
   description = "ARN of the target group for ECS service"
   type        = string
 }
+
+# S3 Batch Transcription Configuration
+variable "transcription_bucket_name" {
+  description = "S3 bucket name for batch transcription (leave empty to disable)"
+  type        = string
+  default     = ""
+}

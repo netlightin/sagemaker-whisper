@@ -67,10 +67,10 @@ output "cloudwatch_log_group" {
 output "deployment_summary" {
   description = "Summary of deployed resources"
   value = {
-    application_url        = var.enable_https ? "https://${module.networking.alb_dns_name}" : "http://${module.networking.alb_dns_name}"
-    sagemaker_endpoint     = module.sagemaker.endpoint_name
-    ecs_cluster            = module.ecs.cluster_name
-    cloudwatch_dashboard   = aws_cloudwatch_dashboard.main.dashboard_name
-    region                 = var.aws_region
+    application_url      = var.enable_https ? "https://${module.networking.alb_dns_name}" : "http://${module.networking.alb_dns_name}"
+    sagemaker_endpoint   = module.sagemaker.endpoint_name
+    ecs_cluster          = module.ecs.cluster_name
+    cloudwatch_dashboard = aws_cloudwatch_dashboard.main.dashboard_name
+    region               = var.aws_region
   }
 }

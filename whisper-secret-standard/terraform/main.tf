@@ -101,6 +101,8 @@ module "sagemaker" {
   error_threshold   = 5
   latency_threshold = 30000
 
+  transcription_bucket_name = var.transcription_bucket_name
+
   tags = var.common_tags
 
   depends_on = [module.networking]
@@ -110,15 +112,15 @@ module "sagemaker" {
 module "ecs" {
   source = "./modules/ecs"
 
-  project_name   = var.project_name
-  aws_region     = var.aws_region
+  project_name    = var.project_name
+  aws_region      = var.aws_region
   container_image = "${module.ecr_api.repository_url}:latest"
 
   # Task Configuration
-  task_cpu       = var.api_cpu
-  task_memory    = var.api_memory
-  desired_count  = var.api_desired_count
-  max_capacity   = var.api_max_capacity
+  task_cpu           = var.api_cpu
+  task_memory        = var.api_memory
+  desired_count      = var.api_desired_count
+  max_capacity       = var.api_max_capacity
   log_retention_days = 7
 
   # SageMaker Configuration
@@ -133,7 +135,29 @@ module "ecs" {
   alb_listener_arn = module.networking.http_listener_arn
   target_group_arn = module.networking.api_target_group_arn
 
+  # S3 Batch Transcription
+  transcription_bucket_name = var.transcription_bucket_name
+
   depends_on = [module.sagemaker, module.networking]
+}
+
+# S3 Bucket for Batch Transcription
+resource "aws_s3_bucket" "transcription" {
+  count  = var.transcription_bucket_name != "" ? 1 : 0
+  bucket = var.transcription_bucket_name
+
+  tags = {
+    Name = var.transcription_bucket_name
+  }
+}
+
+resource "aws_s3_bucket_versioning" "transcription" {
+  count  = var.transcription_bucket_name != "" ? 1 : 0
+  bucket = aws_s3_bucket.transcription[0].id
+
+  versioning_configuration {
+    status = "Disabled"
+  }
 }
 
 # CloudWatch Dashboard

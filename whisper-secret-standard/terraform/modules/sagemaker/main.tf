@@ -1,6 +1,6 @@
 # IAM Role for SageMaker Execution
 resource "aws_iam_role" "sagemaker_execution" {
-  name               = "${var.project_name}-sagemaker-execution-role"
+  name = "${var.project_name}-sagemaker-execution-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -42,12 +42,18 @@ resource "aws_iam_role_policy" "sagemaker_s3_access" {
           "s3:GetObject",
           "s3:ListBucket"
         ]
-        Resource = [
-          "arn:aws:s3:::${var.model_bucket_name}",
-          "arn:aws:s3:::${var.model_bucket_name}/*",
-          "arn:aws:s3:::infra-red-bucket",
-          "arn:aws:s3:::infra-red-bucket/*"
-        ]
+        Resource = concat(
+          [
+            "arn:aws:s3:::${var.model_bucket_name}",
+            "arn:aws:s3:::${var.model_bucket_name}/*",
+            "arn:aws:s3:::infra-red-bucket",
+            "arn:aws:s3:::infra-red-bucket/*"
+          ],
+          var.transcription_bucket_name != "" ? [
+            "arn:aws:s3:::${var.transcription_bucket_name}",
+            "arn:aws:s3:::${var.transcription_bucket_name}/input/*"
+          ] : []
+        )
       },
       {
         Effect = "Allow"

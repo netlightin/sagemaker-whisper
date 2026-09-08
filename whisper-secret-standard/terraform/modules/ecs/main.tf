@@ -93,6 +93,43 @@ resource "aws_iam_role_policy" "sagemaker_invoke_policy" {
   })
 }
 
+# IAM Policy for S3 Batch Transcription Access
+resource "aws_iam_role_policy" "s3_batch_policy" {
+  count = var.transcription_bucket_name != "" ? 1 : 0
+  name  = "${var.project_name}-s3-batch-policy"
+  role  = aws_iam_role.ecs_task_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "ListInputBucket"
+        Effect = "Allow"
+        Action = [
+          "s3:ListBucket"
+        ]
+        Resource = "arn:aws:s3:::${var.transcription_bucket_name}"
+      },
+      {
+        Sid    = "ReadInputObjects"
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject"
+        ]
+        Resource = "arn:aws:s3:::${var.transcription_bucket_name}/input/*"
+      },
+      {
+        Sid    = "WriteOutputObjects"
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject"
+        ]
+        Resource = "arn:aws:s3:::${var.transcription_bucket_name}/output/*"
+      }
+    ]
+  })
+}
+
 # CloudWatch Log Group
 resource "aws_cloudwatch_log_group" "ecs" {
   name              = "/ecs/${var.project_name}"

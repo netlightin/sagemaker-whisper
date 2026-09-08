@@ -11,6 +11,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awsconfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/sagemakerruntime"
 	"github.com/loud-meadow/api/src/config"
 	"github.com/loud-meadow/api/src/utils"
@@ -20,6 +21,7 @@ type Handler struct {
 	cfg             *config.Config
 	logger          *utils.Logger
 	sagemakerClient *sagemakerruntime.Client
+	s3Client        *s3.Client
 }
 
 type TranscriptionResponse struct {
@@ -65,6 +67,7 @@ func NewHandler(cfg *config.Config, logger *utils.Logger) *Handler {
 		cfg:             cfg,
 		logger:          logger,
 		sagemakerClient: sagemakerruntime.NewFromConfig(awsCfg),
+		s3Client:        s3.NewFromConfig(awsCfg),
 	}
 }
 
