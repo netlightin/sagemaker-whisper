@@ -1,5 +1,5 @@
 ### Transcribe audio file
-POST http://loud-meadow-alb-442289810.eu-west-1.elb.amazonaws.com/transcribe
+POST http://loud-meadow-alb-1890866135.eu-west-1.elb.amazonaws.com/transcribe
 x-api-key: e20ce61a459e49ed9319ceab0f72b5d1
 Content-Type: multipart/form-data; boundary=boundary
 

@@ -32,9 +32,12 @@ type TranscriptionResponse struct {
 
 // SageMaker response format from the inference endpoint
 type SageMakerResponse struct {
-	Success       bool                      `json:"success"`
-	Transcription string                    `json:"transcription"`
-	Metadata      SageMakerResponseMetadata `json:"metadata"`
+	Success           bool                      `json:"success"`
+	Transcription     string                    `json:"transcription"`
+	Metadata          SageMakerResponseMetadata `json:"metadata"`
+	HasMore           bool                      `json:"has_more"`
+	ProcessedDuration float64                   `json:"processed_duration"`
+	Offset            float64                   `json:"offset"`
 }
 
 type SageMakerResponseMetadata struct {

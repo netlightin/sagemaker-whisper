@@ -298,45 +298,89 @@ func (h *Handler) getOutputKey(inputKey string) string {
 }
 
 // invokeSageMakerWithS3URL invokes SageMaker with an S3 audio URL
+// Handles long audio by splitting into chunks with offset/max_duration parameters
 func (h *Handler) invokeSageMakerWithS3URL(audioURL, language string) (*TranscriptionResponse, error) {
-	ctx := context.TODO()
+	var allTranscriptions []string
+	var totalDuration float64
+	offset := 0.0
+	maxDuration := 45.0 // 45 seconds per chunk - safe margin for 60s SageMaker timeout
+	chunkNum := 0
 
-	// Build JSON payload matching inference.py's expected format
-	payload := map[string]string{
-		"audio_url": audioURL,
-		"language":  language,
-	}
-	payloadBytes, err := json.Marshal(payload)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal payload: %w", err)
+	for {
+		chunkNum++
+		h.logger.Info(fmt.Sprintf("Processing chunk %d at offset %.1fs: %s", chunkNum, offset, audioURL))
+
+		// Use timeout context for each chunk invocation
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+
+		// Build JSON payload with offset and max_duration
+		payload := map[string]interface{}{
+			"audio_url":    audioURL,
+			"language":     language,
+			"offset":       offset,
+			"max_duration": maxDuration,
+		}
+		payloadBytes, err := json.Marshal(payload)
+		if err != nil {
+			cancel()
+			return nil, fmt.Errorf("failed to marshal payload: %w", err)
+		}
+
+		input := &sagemakerruntime.InvokeEndpointInput{
+			EndpointName: aws.String(h.cfg.SageMakerEndpoint),
+			ContentType:  aws.String("application/json"),
+			Body:         payloadBytes,
+		}
+
+		result, err := h.sagemakerClient.InvokeEndpoint(ctx, input)
+		cancel() // Clean up context
+		if err != nil {
+			return nil, fmt.Errorf("SageMaker invocation error (chunk %d, offset %.1fs): %w", chunkNum, offset, err)
+		}
+
+		// Parse SageMaker response
+		var sagemakerResp SageMakerResponse
+		if err := json.Unmarshal(result.Body, &sagemakerResp); err != nil {
+			return nil, fmt.Errorf("failed to parse SageMaker response: %w", err)
+		}
+
+		if !sagemakerResp.Success {
+			return nil, fmt.Errorf("transcription failed at chunk %d", chunkNum)
+		}
+
+		// Append transcription if not empty
+		if sagemakerResp.Transcription != "" {
+			allTranscriptions = append(allTranscriptions, sagemakerResp.Transcription)
+		}
+		totalDuration += sagemakerResp.ProcessedDuration
+
+		h.logger.Info(fmt.Sprintf("Chunk %d completed: processed %.1fs, has_more=%v",
+			chunkNum, sagemakerResp.ProcessedDuration, sagemakerResp.HasMore))
+
+		// Check if there's more audio to process
+		if !sagemakerResp.HasMore {
+			break
+		}
+
+		// Move offset forward for next chunk
+		offset += sagemakerResp.ProcessedDuration
+
+		// Safety: limit to 100 chunks (75+ minutes of audio)
+		if chunkNum >= 100 {
+			h.logger.Info("Reached maximum chunk limit (100), stopping")
+			break
+		}
 	}
 
-	input := &sagemakerruntime.InvokeEndpointInput{
-		EndpointName: aws.String(h.cfg.SageMakerEndpoint),
-		ContentType:  aws.String("application/json"),
-		Body:         payloadBytes,
-	}
-
-	h.logger.Info(fmt.Sprintf("Invoking SageMaker with S3 URL: %s (language: %s)", audioURL, language))
-	result, err := h.sagemakerClient.InvokeEndpoint(ctx, input)
-	if err != nil {
-		return nil, fmt.Errorf("SageMaker invocation error: %w", err)
-	}
-
-	// Parse SageMaker response
-	var sagemakerResp SageMakerResponse
-	if err := json.Unmarshal(result.Body, &sagemakerResp); err != nil {
-		return nil, fmt.Errorf("failed to parse SageMaker response: %w", err)
-	}
-
-	if !sagemakerResp.Success {
-		return nil, fmt.Errorf("transcription failed")
-	}
+	// Combine all transcriptions
+	combinedText := strings.Join(allTranscriptions, " ")
+	h.logger.Info(fmt.Sprintf("Transcription complete: %d chunks, %.1fs total, %d characters",
+		chunkNum, totalDuration, len(combinedText)))
 
 	return &TranscriptionResponse{
-		Text:     sagemakerResp.Transcription,
-		Language: sagemakerResp.Metadata.Language,
-		Duration: sagemakerResp.Metadata.AudioDurationSeconds,
+		Text:     combinedText,
+		Language: language,
+		Duration: totalDuration,
 	}, nil
 }
 

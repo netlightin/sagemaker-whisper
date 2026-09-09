@@ -1,11 +1,13 @@
+@jobId = 0438b95efceda65e1b6a9a0a622f52aa
+
 ### Start batch transcription job
 ### Processes all audio files in input/swedish/ and input/english/ from S3
-GET http://loud-meadow-alb-442289810.eu-west-1.elb.amazonaws.com/batch-transcribe
+GET http://loud-meadow-alb-1890866135.eu-west-1.elb.amazonaws.com/batch-transcribe
 x-api-key: e20ce61a459e49ed9319ceab0f72b5d1
 
 ###
 
 ### Check batch transcription job status
-### Replace {job_id} with the actual job ID returned from the start request
-GET http://loud-meadow-alb-442289810.eu-west-1.elb.amazonaws.com/batch-transcribe/status?id=4dafa0803d1377c4068bdd1adcbad6c8
+### Update jobId variable above with the ID returned from the start request
+GET http://loud-meadow-alb-1890866135.eu-west-1.elb.amazonaws.com/batch-transcribe/status?id={{jobId}}
 x-api-key: e20ce61a459e49ed9319ceab0f72b5d1

@@ -144,6 +144,8 @@ def input_fn(
         language = None
         task = "transcribe"
         sample_rate = DEFAULT_SAMPLE_RATE
+        offset_seconds = 0
+        max_duration = 45  # Default: 45 seconds per chunk (safe for 60s timeout)
 
         if content_type == "application/json":
             # Parse JSON input - handle both bytes and pre-parsed dict (from Flask)
@@ -158,6 +160,8 @@ def input_fn(
             # Extract parameters
             language = data.get("language")
             task = data.get("task", "transcribe")
+            offset_seconds = data.get("offset", 0)  # Start offset in seconds
+            max_duration = data.get("max_duration", 45)  # Max duration per chunk (45s safe for 60s timeout)
 
             # Get audio data
             if "audio" in data:
@@ -203,21 +207,53 @@ def input_fn(
 
         # Load and process audio
         audio_tensor, sample_rate = load_audio(audio_data)
+        total_duration = audio_tensor.shape[0] / sample_rate
         logger.info(
             f"Audio loaded: {audio_tensor.shape[0]} samples at {sample_rate} Hz"
         )
+        logger.info(f"Total audio duration: {total_duration:.2f} seconds")
 
-        # Log audio duration
-        duration = audio_tensor.shape[0] / sample_rate
+        # Apply offset (skip first N seconds)
+        if offset_seconds > 0:
+            offset_samples = int(offset_seconds * sample_rate)
+            if offset_samples >= len(audio_tensor):
+                # Offset beyond audio length - nothing to process
+                logger.info(f"Offset {offset_seconds}s exceeds audio length, nothing to process")
+                return {
+                    "audio": np.array([], dtype=np.float32),
+                    "sample_rate": sample_rate,
+                    "language": language,
+                    "task": task,
+                    "duration": 0,
+                    "has_more": False,
+                    "offset": offset_seconds,
+                    "total_duration": total_duration,
+                }
+            audio_tensor = audio_tensor[offset_samples:]
+            logger.info(f"Applied offset: skipped first {offset_seconds}s ({offset_samples} samples)")
 
-        logger.info(f"Audio duration: {duration:.2f} seconds")
+        # Apply max_duration limit
+        remaining_duration = len(audio_tensor) / sample_rate
+        max_samples = int(max_duration * sample_rate)
+        if len(audio_tensor) > max_samples:
+            audio_tensor = audio_tensor[:max_samples]
+            has_more = True
+            processed_duration = max_duration
+            logger.info(f"Truncated to {max_duration}s, has_more=True")
+        else:
+            has_more = False
+            processed_duration = remaining_duration
+            logger.info(f"Processing full remaining {processed_duration:.2f}s, has_more=False")
 
         return {
             "audio": audio_tensor,
             "sample_rate": sample_rate,
             "language": language,
             "task": task,
-            "duration": duration,
+            "duration": processed_duration,
+            "has_more": has_more,
+            "offset": offset_seconds,
+            "total_duration": total_duration,
         }
 
     except Exception as e:
@@ -298,8 +334,27 @@ def predict_fn(
         language = input_data.get("language")
         task = input_data.get("task", "transcribe")
         duration = input_data.get("duration", 0)
+        has_more = input_data.get("has_more", False)
+        offset = input_data.get("offset", 0)
+        total_duration = input_data.get("total_duration", duration)
 
-        logger.info(f"Processing audio: {duration:.2f} seconds at {sample_rate} Hz")
+        logger.info(f"Processing audio chunk: {duration:.2f}s at offset {offset}s (total: {total_duration:.2f}s)")
+
+        # Handle empty audio (offset beyond audio length)
+        if len(audio) == 0:
+            logger.info("Empty audio chunk, returning empty transcription")
+            return {
+                "transcription": "",
+                "language": language if language else "unknown",
+                "task": task,
+                "inference_time_seconds": 0,
+                "audio_duration_seconds": 0,
+                "model": "kb-whisper",
+                "has_more": False,
+                "offset": offset,
+                "processed_duration": 0,
+            }
+
         logger.info(f"Audio array shape: {audio.shape}, dtype: {audio.dtype}")
 
         # Whisper processes ~30 seconds of audio at a time
@@ -374,6 +429,9 @@ def predict_fn(
             "inference_time_seconds": inference_time,
             "audio_duration_seconds": duration,
             "model": "kb-whisper",
+            "has_more": has_more,
+            "offset": offset,
+            "processed_duration": duration,
         }
 
     except Exception as e:
@@ -415,6 +473,9 @@ def output_fn(prediction: Dict[str, Any], accept: str = "application/json") -> b
                         prediction["audio_duration_seconds"], 2
                     ),
                 },
+                "has_more": prediction.get("has_more", False),
+                "processed_duration": round(prediction.get("processed_duration", 0), 2),
+                "offset": prediction.get("offset", 0),
             }
             return json.dumps(output, ensure_ascii=False).encode("utf-8")
 
