@@ -156,7 +156,7 @@ func (h *Handler) runLoadTest(testID string, audioPath string, numberOfRequests 
 			}
 
 			// Invoke SageMaker
-			transcription, err := h.invokeSageMaker(audioData)
+			transcription, err := h.invokeSageMaker(audioData, "")
 			testRequest.EndTime = time.Now()
 			testRequest.Duration = testRequest.EndTime.Sub(testRequest.StartTime).Seconds() * 1000 // Convert to ms
 

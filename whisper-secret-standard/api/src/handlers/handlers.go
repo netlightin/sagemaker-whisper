@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -131,8 +132,11 @@ func (h *Handler) Transcribe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get optional language parameter
+	language := r.FormValue("language")
+
 	// Invoke SageMaker endpoint
-	transcription, err := h.invokeSageMaker(audioData)
+	transcription, err := h.invokeSageMaker(audioData, language)
 	if err != nil {
 		h.logger.Error("SageMaker invocation failed:", err)
 		h.sendError(w, "Transcription failed: "+err.Error(), http.StatusInternalServerError)
@@ -165,14 +169,36 @@ func (h *Handler) Status(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func (h *Handler) invokeSageMaker(audioData []byte) (*TranscriptionResponse, error) {
+func (h *Handler) invokeSageMaker(audioData []byte, language string) (*TranscriptionResponse, error) {
 	ctx := context.TODO()
+
+	var body []byte
+	var contentType string
+
+	if language != "" {
+		// Build JSON payload with base64 audio and language
+		payload := map[string]string{
+			"audio":    base64.StdEncoding.EncodeToString(audioData),
+			"language": language,
+		}
+		var err error
+		body, err = json.Marshal(payload)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal JSON payload: %w", err)
+		}
+		contentType = "application/json"
+		h.logger.Info(fmt.Sprintf("Using specified language: %s", language))
+	} else {
+		// Use raw bytes (current behavior for auto-detection)
+		body = audioData
+		contentType = "application/octet-stream"
+	}
 
 	// Invoke the SageMaker endpoint
 	input := &sagemakerruntime.InvokeEndpointInput{
 		EndpointName: aws.String(h.cfg.SageMakerEndpoint),
-		ContentType:  aws.String("application/octet-stream"),
-		Body:         audioData,
+		ContentType:  aws.String(contentType),
+		Body:         body,
 	}
 
 	h.logger.Info("Invoking SageMaker endpoint...")

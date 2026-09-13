@@ -160,6 +160,20 @@ resource "aws_s3_bucket_versioning" "transcription" {
   }
 }
 
+# Create folder structure for batch transcription
+resource "aws_s3_object" "transcription_folders" {
+  for_each = var.transcription_bucket_name != "" ? toset([
+    "input/swedish/",
+    "input/english/",
+    "output/swedish/",
+    "output/english/"
+  ]) : toset([])
+
+  bucket       = aws_s3_bucket.transcription[0].id
+  key          = each.value
+  content_type = "application/x-directory"
+}
+
 # CloudWatch Dashboard
 resource "aws_cloudwatch_dashboard" "main" {
   dashboard_name = "${var.project_name}-dashboard"

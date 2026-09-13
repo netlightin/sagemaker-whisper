@@ -1,8 +1,8 @@
-@baseUrl = loud-meadow-alb-1890866135.eu-west-1.elb.amazonaws.com
+@baseUrl = loud-meadow-alb-1455588450.eu-west-1.elb.amazonaws.com
 @apiKey = e20ce61a459e49ed9319ceab0f72b5d1
-@audioFile = /Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/whisper-secret-standard/b.mp3
+@audioFile = /Users/raer/Documents/code/ncapi/stuff/sagemaker-whisper/whisper-secret-standard/rec_1789071546485.wav
 
-### Transcribe audio file
+### Transcribe audio file (auto-detect language)
 POST http://{{baseUrl}}/transcribe
 x-api-key: {{apiKey}}
 Content-Type: multipart/form-data; boundary=boundary
@@ -12,4 +12,20 @@ Content-Disposition: form-data; name="audio"; filename="b.mp3"
 Content-Type: audio/mpeg
 
 < {{audioFile}}
+--boundary--
+
+### Transcribe audio file with specified language
+POST http://{{baseUrl}}/transcribe
+x-api-key: {{apiKey}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="audio"; filename="b.mp3"
+Content-Type: audio/mpeg
+
+< {{audioFile}}
+--boundary
+Content-Disposition: form-data; name="language"
+
+sv
 --boundary--
