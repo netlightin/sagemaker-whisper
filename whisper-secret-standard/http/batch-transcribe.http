@@ -1,6 +1,6 @@
 @baseUrl = loud-meadow-alb-1455588450.eu-west-1.elb.amazonaws.com
 @apiKey = e20ce61a459e49ed9319ceab0f72b5d1
-@jobId = 3e6d33f849cbbebf7a42c631d086bf1a
+@jobId = adf0fe33f3b88bb64e59ec10654a4b72
 
 ### Start batch transcription job
 ### Processes all audio files in input/swedish/ and input/english/ from S3
